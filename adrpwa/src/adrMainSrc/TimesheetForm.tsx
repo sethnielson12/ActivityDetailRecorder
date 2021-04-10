@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import { openDB, DBSchema } from "idb";
 
 import PdfCreator from "./PdfCreator";
+import ActivityListDisplayer from "./ActivityListDisplayer";
 
 import { ActivitySheet, SingleActivity } from "./types";
 
@@ -15,7 +16,7 @@ interface MyDB extends DBSchema {
   activitySheet: {
     value: ActivitySheet;
     key: string;
-    indexes: { "by-date": number };
+    indexes: { "by-date": string };
   };
 }
 
@@ -26,7 +27,7 @@ async function demo(tempEntry: ActivitySheet) {
       const productStore = db.createObjectStore("activitySheet", {
         keyPath: "timesheetId",
       });
-      productStore.createIndex("by-date", "price");
+      productStore.createIndex("by-date", "date");
     },
   });
 
@@ -53,6 +54,12 @@ const useStyles = makeStyles((theme: Theme) =>
     items: {
       paddingTop: theme.spacing(1),
     },
+    activityListDisplayer: {
+      alignContent: "center",
+      alignItems: "center",
+      width: "100%",
+      maxWidth: 300,
+    },
   })
 );
 
@@ -63,13 +70,13 @@ function TimesheetForm() {
     date: "03/19/2021", //mmddyyyy
     timeIn: "15:45am", // hh:mm
     timeOut: "16:30am", // hh:mm
-    singleActivityTotalHours: "45 mins", //
+    singleActivityTotalHours: "45 minutes", //
     description:
-      "Bacon ipsum dolor amet pastrami pork loin pancetta landjaeger salami cupim capicola short loin. Kevin swine boudin landjaeger meatball sausage. Landjaeger rump chislic ribeye ham, pig ham hock prosciutto bacon drumstick pork loin tenderloin shank ball tip biltong. Pork chop biltong tri-tip, brisket rump tongue kevin tail t-bone cupim fatback pork belly pancetta. Tongue filet mignon ground round pancetta. Spare ribs rump filet mignon andouille, ham ribeye pork belly.",
+      "3Bacon ipsum dolor amet pastrami pork loin pancetta landjaeger salami cupim capicola short loin. Kevin swine boudin landjaeger meatball sausage. Landjaeger rump chislic ribeye ham, pig ham hock prosciutto bacon drumstick pork loin tenderloin shank ball tip biltong. Pork chop biltong tri-tip, brisket rump tongue kevin tail t-bone cupim fatback pork belly pancetta. Tongue filet mignon ground round pancetta. Spare ribs rump filet mignon andouille, ham ribeye pork belly.",
   };
 
   const tempEntry: ActivitySheet = {
-    timesheetId: "1234",
+    timesheetId: "12345",
     clientName: "clientNameTemp",
     programName: "programNameTemp",
     employeeName: "employeeNameTemp",
@@ -97,7 +104,7 @@ function TimesheetForm() {
     "45 mins"
   );
   const [description, setDescription] = useState(
-    "Bacon ipsum dolor amet pastrami pork loin pancetta landjaeger salami cupim capicola short loin. Kevin swine boudin landjaeger meatball sausage. Landjaeger rump chislic ribeye ham, pig ham hock prosciutto bacon drumstick pork loin tenderloin shank ball tip biltong. Pork chop biltong tri-tip, brisket rump tongue kevin tail t-bone cupim fatback pork belly pancetta. Tongue filet mignon ground round pancetta. Spare ribs rump filet mignon andouille, ham ribeye pork belly."
+    "3Bacon ipsum dolor amet pastrami pork loin pancetta landjaeger salami cupim capicola short loin. Kevin swine boudin landjaeger meatball sausage. Landjaeger rump chislic ribeye ham, pig ham hock prosciutto bacon drumstick pork loin tenderloin shank ball tip biltong. Pork chop biltong tri-tip, brisket rump tongue kevin tail t-bone cupim fatback pork belly pancetta. Tongue filet mignon ground round pancetta. Spare ribs rump filet mignon andouille, ham ribeye pork belly."
   );
 
   const addToActivityList = () => {
@@ -172,6 +179,12 @@ function TimesheetForm() {
             onChange={(event) => {
               setPeriodEnding(event.target.value);
             }}
+          />
+        </Grid>
+        <Grid item xs={12} className={classes.items}>
+          <ActivityListDisplayer
+            activityList={activityList}
+            className={classes.custom}
           />
         </Grid>
 

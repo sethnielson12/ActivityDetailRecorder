@@ -2,7 +2,7 @@
 import { PdfMakeWrapper } from "pdfmake-wrapper";
 import { ActivitySheet } from "./types";
 import pdfFonts from "pdfmake/build/vfs_fonts"; // fonts provided for pdfmake
-import { Table, Cell, Txt } from "pdfmake-wrapper";
+import { Table, Cell, Txt, Canvas, Line } from "pdfmake-wrapper";
 
 const PdfCreator = (entry: ActivitySheet) => {
   // Set the fonts to use
@@ -85,6 +85,42 @@ const PdfCreator = (entry: ActivitySheet) => {
     "*",
   ]).end;
   pdf.add(table2);
+
+  pdf.add(
+    new Txt("Total Hours: _____________")
+      .bold()
+      .margin([0, 10, 0, 0])
+      .fontSize(12).end
+  );
+  pdf.add(new Canvas([new Line([0, 10], [515, 10]).end]).end);
+  pdf.add(
+    new Txt("Submit on the 1st and 16th of each month")
+      .bold()
+      .margin([0, 10, 0, 0])
+      .fontSize(12).end
+  );
+  pdf.add(
+    new Txt(
+      "By signing this form I certify that the hours and activities are accurate for this pay period"
+    )
+      .italics()
+      .margin([0, 5, 0, 0])
+      .fontSize(12).end
+  );
+  pdf.add(
+    new Canvas([
+      new Line([25, 30], [245, 30]).end,
+      new Line([283, 30], [490, 30]).end,
+    ]).end
+  );
+  pdf.add(
+    new Txt(
+      "Employee Signature                                                   Provider Signature "
+    )
+      .bold()
+      .margin([80, 2, 0, 0])
+      .fontSize(12).end
+  );
 
   const createdPDF = pdf.create();
   createdPDF.open();
