@@ -21,9 +21,9 @@ function App() {
         </a> */}
         TimesheetForm
       </header>
-      <body>
+      <div>
         <TimesheetForm />
-      </body>
+      </div>
     </div>
   );
 }
