@@ -1,0 +1,9 @@
+{
+  "short_name": "ADR PWA",
+  "name": "Activity Detail Recorder PWA",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#000000",
+  "orientation": "portrait"
+}

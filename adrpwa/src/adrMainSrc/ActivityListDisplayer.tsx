@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import { SingleActivity } from "./types";
@@ -7,6 +8,10 @@ import { SingleActivity } from "./types";
 interface ActivityListDisplayerProps {
   activityList: SingleActivity[];
   className?: string;
+  setActivityFields: (activity: SingleActivity) => void;
+  indexOfActivityBeingEdited: number;
+  setIndexOfActivityBeingEdited: React.Dispatch<React.SetStateAction<number>>;
+  saveActivityChanges: (keep: boolean) => void;
 }
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,14 +31,24 @@ const useStyles = makeStyles((theme: Theme) =>
 const ActivityListDisplayer = ({
   activityList,
   className,
+  setActivityFields,
+  indexOfActivityBeingEdited,
+  setIndexOfActivityBeingEdited,
+  saveActivityChanges,
 }: ActivityListDisplayerProps) => {
   const classes = useStyles();
+  const [showConfirmBtns, setShowConfirmBtns] = useState(false);
 
-  const list = activityList.map((activity) => {
+  const list = activityList.map((activity, index) => {
     return (
-      <Grid item xs={12} className={className}>
+      <Grid key={index.toString()} item xs={12} className={className}>
         <Grid container>
-          <Grid item xs className={classes.items}>
+          <Grid
+            item
+            key={`date-${index.toString()}`}
+            xs
+            className={classes.items}
+          >
             <div
               style={{
                 display: "flex",
@@ -44,17 +59,96 @@ const ActivityListDisplayer = ({
               {activity.date}
             </div>
           </Grid>
-          <Grid item xs className={classes.items}>
+          <Grid
+            item
+            key={`timeIn-${index.toString()}`}
+            xs
+            className={classes.items}
+          >
             {activity.timeIn}
           </Grid>
-          <Grid item xs className={classes.items}>
+          <Grid
+            item
+            key={`timeOut-${index.toString()}`}
+            xs
+            className={classes.items}
+          >
             {activity.timeOut}
           </Grid>
-          <Grid item xs className={classes.items}>
+          <Grid
+            item
+            key={`singleActivityTotalHours-${index.toString()}`}
+            xs
+            className={classes.items}
+          >
             {activity.singleActivityTotalHours}
           </Grid>
-          <Grid item xs={12} className={classes.descriptionItem}>
+          <Grid
+            item
+            key={`description-${index.toString()}`}
+            xs={12}
+            className={classes.descriptionItem}
+          >
             {activity.description}
+          </Grid>
+          <Grid
+            item
+            key={`edit-buttons${index.toString()}`}
+            xs={12}
+            className={classes.descriptionItem}
+          >
+            {(!showConfirmBtns || indexOfActivityBeingEdited !== index) && (
+              <Button
+                variant="contained"
+                // className={classes.button}
+                onClick={() => {
+                  setActivityFields(activity);
+                  setIndexOfActivityBeingEdited(index);
+                }}
+                style={{ marginRight: 5 }}
+                disabled={showConfirmBtns}
+              >
+                Edit
+              </Button>
+            )}
+            {(!showConfirmBtns || indexOfActivityBeingEdited !== index) && (
+              <Button
+                variant="contained"
+                // className={classes.button}
+                onClick={() => {
+                  setIndexOfActivityBeingEdited(index);
+                  setShowConfirmBtns(true);
+                }}
+                disabled={showConfirmBtns}
+              >
+                Delete
+              </Button>
+            )}
+
+            {showConfirmBtns && indexOfActivityBeingEdited === index && (
+              <Button
+                variant="contained"
+                // className={classes.button}
+                onClick={() => {
+                  setShowConfirmBtns(false);
+                }}
+              >
+                Cancel
+              </Button>
+            )}
+            {showConfirmBtns && indexOfActivityBeingEdited === index && (
+              <Button
+                variant="contained"
+                // className={classes.button}
+                onClick={() => {
+                  setIndexOfActivityBeingEdited(index);
+                  saveActivityChanges(false);
+                  setShowConfirmBtns(false);
+                }}
+              >
+                Confirm
+              </Button>
+            )}
           </Grid>
         </Grid>
         <hr />
