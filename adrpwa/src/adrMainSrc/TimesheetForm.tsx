@@ -183,6 +183,7 @@ function TimesheetForm() {
     setTimesheetTitle(timesheet.timesheetId);
     setClientName(timesheet.clientName);
     setProgramName(timesheet.programName);
+    setEmployeeName(timesheet.employeeName);
     setPeriodEnding(timesheet.periodEnding);
     setActivityList(timesheet.activityList);
     setDate("");
