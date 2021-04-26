@@ -96,15 +96,15 @@ function TimesheetForm() {
       "3Bacon ipsum dolor amet pastrami pork loin pancetta landjaeger salami cupim capicola short loin. Kevin swine boudin landjaeger meatball sausage. Landjaeger rump chislic ribeye ham, pig ham hock prosciutto bacon drumstick pork loin tenderloin shank ball tip biltong. Pork chop biltong tri-tip, brisket rump tongue kevin tail t-bone cupim fatback pork belly pancetta. Tongue filet mignon ground round pancetta. Spare ribs rump filet mignon andouille, ham ribeye pork belly.",
   };
 
-  const tempEntry: ActivitySheet = {
-    timesheetId: "12345",
-    clientName: "clientNameTemp",
-    programName: "programNameTemp",
-    employeeName: "employeeNameTemp",
-    periodEnding: "periodEndingTemp",
-    activityList: [tempSingleEntry],
-    allTotalHours: "allTotalHours",
-  };
+  // const tempEntry: ActivitySheet = {
+  //   timesheetId: "12345",
+  //   clientName: "clientNameTemp",
+  //   programName: "programNameTemp",
+  //   employeeName: "employeeNameTemp",
+  //   periodEnding: "periodEndingTemp",
+  //   activityList: [tempSingleEntry],
+  //   allTotalHours: "allTotalHours",
+  // };
 
   const emptyActivity: ActivitySheet = {
     timesheetId: "",
@@ -116,7 +116,7 @@ function TimesheetForm() {
     allTotalHours: "",
   };
 
-  putEntryInMyDB(tempEntry);
+  // putEntryInMyDB(tempEntry);
   const [showSaveWarning, setShowSaveWarning] = useState(false);
   const [indexOfActivityBeingEdited, setIndexOfActivityBeingEdited] = useState(
     -1
@@ -145,12 +145,6 @@ function TimesheetForm() {
       return timesheetList;
     }
   }, [setTimesheetList]);
-
-  // getTimesheetList().then((tsList) => {
-  //   // tempList = tsList;
-  //   setTimesheetList(tsList);
-  //   setLoading(false);
-  // });
 
   useEffect(() => {
     getTimesheetList().then((tsList) => {
@@ -355,20 +349,26 @@ function TimesheetForm() {
             </Button>
           </Grid>
         )}
-        {showTimesheetSelect && (
+
+        {showTimesheetSelect && timesheetList.length === 0 && (
           <Grid item xs={12} className={classes.items}>
-            {timesheetList.length === 0 ? (
-              <div>Loading Timesheets...</div>
-            ) : (
-              <ActivityListSelector
-                timesheetTitle={timesheetTitle}
-                setShowTimesheetSelect={setShowTimesheetSelect}
-                timesheetList={timesheetList}
-                setValues={setValues}
-                emptyActivity={emptyActivity}
-                loading={loading}
-              />
-            )}
+            <Grid container direction="column" style={{ alignItems: "center" }}>
+              <Grid item xs={12} className={classes.custom}>
+                No Previous Timesheets found. Please create a new one.
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
+        {showTimesheetSelect && timesheetList.length !== 0 && (
+          <Grid item xs={12} className={classes.items}>
+            <ActivityListSelector
+              timesheetTitle={timesheetTitle}
+              setShowTimesheetSelect={setShowTimesheetSelect}
+              timesheetList={timesheetList}
+              setValues={setValues}
+              emptyActivity={emptyActivity}
+              loading={loading}
+            />
           </Grid>
         )}
         <Grid item xs={12} className={classes.items}>
@@ -392,11 +392,7 @@ function TimesheetForm() {
             }
           />
         </Grid>
-        {showSaveWarning && (
-          <Grid item xs={12} className={classes.warning}>
-            <Grid container style={{ alignItems: "center" }}></Grid>
-          </Grid>
-        )}
+
         <Grid item xs={12} className={classes.items}>
           <TextField
             id="clientName"
